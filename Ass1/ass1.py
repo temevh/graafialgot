@@ -14,30 +14,36 @@ import sys
   #-> go to that element, increment n by one
 #else if no B element found 
   #-> go to 
+
 def algorithm(g, B, v, w):
     n = 0
     node = v
-    print("From", node,"to", w)
+    print("From", node, "to", w)
     print("Set B:", B)
 
     while True:
-      adjacent = g.adj[node]
-      print("Adjacent vertices of", node, ":", adjacent)
-      if (adjacent == w):
-         print("END FOUND")
-         return n
-      # Check if any adjacent node is in set B
-      common_nodes = set(adjacent) & B
-      if common_nodes:
-          # Move to the first node in set B
-          next_node = common_nodes.pop()
-          print(f"Moving to node {next_node} from set B")
-          node = next_node
-          n += 1
-      else:
-          break  # No adjacent node in set B
+        adjacent = g.adj[node]
+        print("Adjacent vertices of", node, ":", adjacent)
 
-    print("Total nodes from set B on the path:", n)
+        # Check if the adjacent node is the end node w
+        if w in adjacent:
+            print("END FOUND")
+            if w in B:
+                print("End node is in set B, incrementing n by 1")
+                n += 1
+            return n
+
+        # Check if any adjacent node is in set B
+        common_nodes = set(adjacent) & B
+        if common_nodes:
+            # Move to the first node in set B
+            next_node = common_nodes.pop()
+            print(f"Moving to node {next_node} from set B")
+            node = next_node
+            n += 1
+        else:
+            break  # No adjacent node in set B
+
     return 0
 
 
