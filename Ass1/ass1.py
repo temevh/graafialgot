@@ -23,13 +23,13 @@ def algorithm(g, B, v, w):
 
     while True:
         adjacent = g.adj[node]
-        print("Adjacent vertices of", node, ":", adjacent)
+        #print("Adjacent vertices of", node, ":", adjacent)
 
         # Check if the adjacent node is the end node w
         if w in adjacent:
-            print("END FOUND")
+            print("END REACHED")
             if w in B:
-                print("End node is in set B, incrementing n by 1")
+                #print("End node is in set B, incrementing n by 1")
                 n += 1
             return n
 
@@ -38,7 +38,7 @@ def algorithm(g, B, v, w):
         if common_nodes:
             # Move to the first node in set B
             next_node = common_nodes.pop()
-            print(f"Moving to node {next_node} from set B")
+            #print(f"Moving to node {next_node} from set B")
             node = next_node
             n += 1
         else:
@@ -79,6 +79,6 @@ if __name__ == "__main__":
   n = algorithm(g, B, v, w)
 
   # Print the result:
-  print(n)
+  print("result:",n)
   
 
