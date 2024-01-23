@@ -16,28 +16,29 @@ import sys
   #-> go to 
 def algorithm(g, B, v, w):
     n = 0
-    visited = set()
     node = v
-    print("Starting from node:", node)
+    print("From", node,"to", w)
     print("Set B:", B)
 
     while True:
-        adjacent = g.adj[node]
-        print("Adjacent vertices of", node, ":", adjacent)
-
-        # Check if any adjacent node is in set B
-        common_nodes = set(adjacent) & B
-        if common_nodes:
-            # Move to the first node in set B
-            next_node = common_nodes.pop()
-            print(f"Moving to node {next_node} from set B")
-            node = next_node
-            n += 1
-        else:
-            break  # No adjacent node in set B
+      adjacent = g.adj[node]
+      print("Adjacent vertices of", node, ":", adjacent)
+      if (adjacent == w):
+         print("END FOUND")
+         return n
+      # Check if any adjacent node is in set B
+      common_nodes = set(adjacent) & B
+      if common_nodes:
+          # Move to the first node in set B
+          next_node = common_nodes.pop()
+          print(f"Moving to node {next_node} from set B")
+          node = next_node
+          n += 1
+      else:
+          break  # No adjacent node in set B
 
     print("Total nodes from set B on the path:", n)
-    return n
+    return 0
 
 
 ### Read in a set of vertices from a file. These are just numbers separated by whitespace.
