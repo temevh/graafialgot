@@ -1,4 +1,3 @@
-
 ### Read in a graph, a set of vertices, and a pair of vertices. 
 
 import graph
@@ -38,11 +37,14 @@ def algorithm(g, B, v, w):
         if common_nodes:
             # Move to the first node in set B
             next_node = common_nodes.pop()
-            #print(f"Moving to node {next_node} from set B")
+            print(f"Moving to node {next_node} from set B")
             node = next_node
             n += 1
         else:
-            break  # No adjacent node in set B
+            next_node = min(adjacent)
+            print(f"Moving to node {next_node}")
+            node = next_node
+            #break  # No adjacent node in set B
 
     return 0
 
