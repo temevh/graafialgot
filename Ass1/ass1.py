@@ -3,7 +3,6 @@
 import graph
 import sys
 
-## Implement your algorithm here:
 #For testpair1, v = 0, w = 7
 #g = testcase1.txt, B = 2 4 6
 
@@ -15,38 +14,37 @@ import sys
   #-> go to 
 
 def algorithm(g, B, v, w):
-    n = 0
-    node = v
-    print("From", node, "to", w)
-    print("Set B:", B)
+  n = 0
+  node = v
+  print("From", node, "to", w)
+  print("Set B:", B)
 
-    while True:
-        adjacent = g.adj[node]
-        #print("Adjacent vertices of", node, ":", adjacent)
+  while True:
+      adjacent = g.adj[node]
+      #print("Adjacent vertices of", node, ":", adjacent)
 
-        # Check if the adjacent node is the end node w
-        if w in adjacent:
-            print("END REACHED")
-            if w in B:
-                #print("End node is in set B, incrementing n by 1")
-                n += 1
-            return n
+      # Check if the adjacent node is the end node w
+      if w in adjacent:
+          print(f"END NODE {w} REACHED")
+          if w in B:
+              #End node is in set B, incrementing n by 1
+              n += 1
+          return n
 
-        # Check if any adjacent node is in set B
-        common_nodes = set(adjacent) & B
-        if common_nodes:
-            # Move to the first node in set B
-            next_node = common_nodes.pop()
-            print(f"Moving to node {next_node} from set B")
-            node = next_node
-            n += 1
-        else:
-            next_node = min(adjacent)
-            print(f"Moving to node {next_node}")
-            node = next_node
-            #break  # No adjacent node in set B
-
-    return 0
+      # Check if any adjacent node is in set B
+      common_nodes = set(adjacent) & B
+      if common_nodes:
+          # Move to the first node in set B
+          next_node = common_nodes.pop()
+          print(f"Moving to node {next_node} from set B")
+          node = next_node
+          n += 1
+      else:
+          # No adjacent node in set B, choose the smallest adjacent node
+          next_node = min(adjacent)
+          print(f"Moving to node {next_node}")
+          node = next_node
+  return 0
 
 
 ### Read in a set of vertices from a file. These are just numbers separated by whitespace.
