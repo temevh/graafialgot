@@ -35,13 +35,20 @@ class Graph:
         self.adj.extend([ [] for i in range(u+1-self.n)])
         self.n = u+1
       if len(line) > 1:
-        for v in line[1].split(";"):
-          if v != "" and not v.isspace(): 
+        edges = line[1]
+        if ';' in edges:
+          delim = ';'
+        else:
+          delim = ' '
+        for v in edges.split(delim):
+          try: 
             if len(v.split(",")) > 1:
               v,w = v.split(",")              
               self.addEdge(u,int(v),int(w))
             else:                              
               self.addEdge(u,int(v))
+          except:
+            pass
     f.close()
 
   """ Output file in the same format as input file """
