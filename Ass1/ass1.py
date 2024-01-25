@@ -14,38 +14,33 @@ import sys
   #-> go to 
 
 def algorithm(g, B, v, w):
-  n = 0
-  node = v
-  print("From", node, "to", w)
-  print("Set B:", B)
+    n = 0
+    node = v
+    visited = set()
 
-  while True:
-      adjacent = g.adj[node]
-      #print("Adjacent vertices of", node, ":", adjacent)
-
-      # Check if the adjacent node is the end node w
-      if w in adjacent:
-          print(f"END NODE {w} REACHED")
-          if w in B:
-              #End node is in set B, incrementing n by 1
-              n += 1
+    while True:
+      if node == w:
           return n
 
-      # Check if any adjacent node is in set B
+      visited.add(node)
+      adjacent = [neighbor for neighbor in g.adj[node] if neighbor not in visited]
+
+      if not adjacent:
+          # No more reachable nodes
+          break
+
       common_nodes = set(adjacent) & B
       if common_nodes:
           # Move to the first node in set B
           next_node = common_nodes.pop()
-          print(f"Moving to node {next_node} from set B")
-          node = next_node
           n += 1
       else:
           # No adjacent node in set B, choose the smallest adjacent node
           next_node = min(adjacent)
-          print(f"Moving to node {next_node}")
-          node = next_node
-  return 0
 
+      node = next_node
+
+    return 0
 
 ### Read in a set of vertices from a file. These are just numbers separated by whitespace.
 def readset(filename):
