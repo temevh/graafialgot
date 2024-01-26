@@ -1,38 +1,30 @@
 import graph
 import sys
-from collections import deque
 
 #For testpair1, v = 0, w = 7
 #g = testcase1.txt, B = 2 4 6
 
-#Start from first pair (v) 
-#check adjacency list 
-#if list contains a element that is in B 
-  #-> go to that element, increment n by one
-#else if no B element found 
-  #-> go to 
-
 def algorithm(g, B, s, t):
-    visited  = [False] * 8;
+    visited  = [False] * (g.n) #Create an array that has false for each node
     queue = []
-    n = 0
+    n = 0 #counter to get the result
 
-    queue.append(s)
-    visited[s] = True
+    queue.append(s) #Add the starting node s to the queue
+    visited[s] = True #mark s visited
 
     while queue:
-      s = queue.pop(0)
-      print(s, end=" ")
-      adjacent = [neighbor for neighbor in g.adj[s] if neighbor not in visited]     
-      
-      for i in g.adj[s]:
-        if visited[i] == False:
-          if i in B:
-            n+=1
-          queue.append(i)
-          visited[i] = True
+      s = queue.pop(0) #Get the first/leftmost node from the queue
+      if s == t: #If current node matches the end node break
+        break
+   
+      for i in g.adj[s]: #Loop through the adjacent nodes (from current node)
+        if visited[i] == False: #If an adjacent node has not been visited yet
+          if i in B: #If the not visited node is in set B 
+            n+=1 #increase counter
+          queue.append(i) #add the node to queue
+          visited[i] = True 
         
-    return n
+    return n #Finally return the end result (number of nodes in set)
 
 ### Read in a set of vertices from a file. These are just numbers separated by whitespace.
 def readset(filename):
@@ -67,5 +59,3 @@ if __name__ == "__main__":
 
   # Print the result:
   print("result:",n)
-  
-
