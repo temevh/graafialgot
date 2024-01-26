@@ -1,7 +1,6 @@
-### Read in a graph, a set of vertices, and a pair of vertices. 
-
 import graph
 import sys
+from collections import deque
 
 #For testpair1, v = 0, w = 7
 #g = testcase1.txt, B = 2 4 6
@@ -13,40 +12,27 @@ import sys
 #else if no B element found 
   #-> go to 
 
-def algorithm(g, B, v, w):
+def algorithm(g, B, s, t):
+    visited  = [False] * 8;
+    queue = []
     n = 0
-    node = v
-    visited = set()
 
-    while True:
-      print("node", node)
-      if node == w:
-          return n
+    queue.append(s)
+    visited[s] = True
 
-      visited.add(node)
-      adjacent = [neighbor for neighbor in g.adj[node] if neighbor not in visited]
-      print("adjacent", adjacent)
-
-      if not adjacent:
-          print("END")
-          # No more reachable nodes
-          break
-
-      common_nodes = set(adjacent) & B
-      if common_nodes:
-          # Move to the first node in set B
-          print("common nodes", common_nodes)
-          next_node = common_nodes.pop()
-          n += 1
-      else:
-          # No adjacent node in set B, choose the smallest adjacent node
-          print("no common nodes")
-          next_node = min(adjacent)
-
-      print("next_node", next_node)
-      node = next_node
-
-    return 0
+    while queue:
+      s = queue.pop(0)
+      print(s, end=" ")
+      adjacent = [neighbor for neighbor in g.adj[s] if neighbor not in visited]     
+      
+      for i in g.adj[s]:
+        if visited[i] == False:
+          if i in B:
+            n+=1
+          queue.append(i)
+          visited[i] = True
+        
+    return n
 
 ### Read in a set of vertices from a file. These are just numbers separated by whitespace.
 def readset(filename):
