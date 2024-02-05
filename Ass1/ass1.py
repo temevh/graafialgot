@@ -19,25 +19,31 @@ def algorithm(g, B, v, w):
     visited = set()
 
     while True:
+      print("node", node)
       if node == w:
           return n
 
       visited.add(node)
       adjacent = [neighbor for neighbor in g.adj[node] if neighbor not in visited]
+      print("adjacent", adjacent)
 
       if not adjacent:
+          print("END")
           # No more reachable nodes
           break
 
       common_nodes = set(adjacent) & B
       if common_nodes:
           # Move to the first node in set B
+          print("common nodes", common_nodes)
           next_node = common_nodes.pop()
           n += 1
       else:
           # No adjacent node in set B, choose the smallest adjacent node
+          print("no common nodes")
           next_node = min(adjacent)
 
+      print("next_node", next_node)
       node = next_node
 
     return 0
