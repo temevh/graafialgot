@@ -100,7 +100,7 @@ class FlowNetwork:
     return f
 
   def MinCutEdges(self):
-    f = self.FordFulkerson()
+    f = self.FordFulkerson() #IMPLEMENT THIS
     S = set([])
     ### Find the cut (S,T) by finding the set S.
 
@@ -109,7 +109,7 @@ class FlowNetwork:
 
     ### Find the edges that cross the cut (S,T), i.e., they start from S and end in T.
     ### Return these edges.
-    return Edges
+    return 0
             
 if __name__ == "__main__":
     G = Graph()
