@@ -30,7 +30,7 @@ class Graph:
     f = open(filename, 'r')
     for line in f:
         line = line.strip().split(":")
-        print("reading line", line)
+        #print("reading line", line)
         u = int(line[0])
         if u >= self.n:
             self.adj.extend([[] for i in range(u+1-self.n)])
@@ -41,7 +41,7 @@ class Graph:
             for edge in edges:
                 v, w = map(int, edge.strip("()").split(","))
                 self.addEdge(u, v, w)
-                print("added edge", u, v, w)
+                #print("added edge", u, v, w)
     f.close()
 
   """ Output file in the same format as input file """

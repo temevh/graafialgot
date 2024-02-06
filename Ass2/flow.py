@@ -24,8 +24,6 @@ def SumFlow(f1,f2):
 ## This is an EXAMPLE of how the flow network class can be implemented, some implementation is missing
 class FlowNetwork:
   def __init__(self,G) -> None:
-    for u in range(10):
-      print(G.adj[u])
     self.G = G
     self.FindSource()
     self.FindSink()
@@ -34,11 +32,12 @@ class FlowNetwork:
     for u in range(self.G.n):
       if len(self.G.adj[u]) > 0:
         self.s = u
+        print("source set to", self.s)
         return    
   ## Find the sink. It is the last vertex.
   def FindSink(self):
     self.t = self.G.n-1
-
+    print("sink set to", self.t)
   # Define the value of a flow
   def FlowValue(self,f):
     return sum([f[(self.s,u)] for u in G.adj[self.s] if (self.s,u) in f])
