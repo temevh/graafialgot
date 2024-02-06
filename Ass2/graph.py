@@ -29,26 +29,19 @@ class Graph:
   def readgraph(self, filename: str) -> None:
     f = open(filename, 'r')
     for line in f:
-      line = line.split(":")
-      u = int(line[0])
-      if u >= self.n:
-        self.adj.extend([ [] for i in range(u+1-self.n)])
-        self.n = u+1
-      if len(line) > 1:
-        edges = line[1]
-        if ';' in edges:
-          delim = ';'
-        else:
-          delim = ' '
-        for v in edges.split(delim):
-          try: 
-            if len(v.split(",")) > 1:
-              v,w = v.split(",")              
-              self.addEdge(u,int(v),int(w))
-            else:                              
-              self.addEdge(u,int(v))
-          except:
-            pass
+        line = line.strip().split(":")
+        print("reading line", line)
+        u = int(line[0])
+        if u >= self.n:
+            self.adj.extend([[] for i in range(u+1-self.n)])
+            self.n = u+1
+        if len(line) > 1:
+            edges = line[1]
+            edges = edges.strip().split()
+            for edge in edges:
+                v, w = map(int, edge.strip("()").split(","))
+                self.addEdge(u, v, w)
+                print("added edge", u, v, w)
     f.close()
 
   """ Output file in the same format as input file """

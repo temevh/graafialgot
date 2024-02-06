@@ -1,6 +1,5 @@
 # A template for Ford Fulkerson algorithm and min cut
 
-from collections import deque
 from graph import Graph
 from copy import deepcopy as copy
 import sys
@@ -21,11 +20,10 @@ def SumFlow(f1,f2):
   return f
 
 
+
 ## This is an EXAMPLE of how the flow network class can be implemented, some implementation is missing
 class FlowNetwork:
   def __init__(self,G) -> None:
-    for u in range(10):
-      print(G.adj[u])
     self.G = G
     self.FindSource()
     self.FindSink()
@@ -69,31 +67,9 @@ class FlowNetwork:
       s = self.s
     if t is None:
       t = self.t
-    
-    # Create dictionaries to store the visited status and the parents
-    visited = {v: False for v in range(self.G.n)}
-    parent = {v: None for v in range(self.G.n)}
-
-    queue = deque()
-    queue.append(s)
-    visited[s] = True
-
-    while queue:
-        u = queue.popleft()
-        for v in self.G.adj[u]:
-            # Check for residual capacity
-            if (u, v) in Gr.w and Gr.w[(u, v)] > 0 and not visited[v]:
-                queue.append(v)
-                visited[v] = True
-                parent[v] = u
-                if v == t:  # Sink reached
-                    path = []
-                    # Backtrack using parent pointers to reconstruct the path
-                    while v:
-                        path.insert(0, v)
-                        v = parent[v]
-                    return path
-    return []  # No path found
+    ## Now calculate the path. 
+    path = []
+    return path  
 
   ## Make an augmenting flow from a path
   def MakeAugFlow(self,path, Gr = None):
@@ -125,25 +101,14 @@ class FlowNetwork:
 
   def MinCutEdges(self):
     f = self.FordFulkerson()
-    # Implementing BFS to find set S of the min cut
-    visited = {v: False for v in range(self.G.n)}
-    queue = deque()
-    queue.append(self.s)
-    visited[self.s] = True
+    S = set([])
+    ### Find the cut (S,T) by finding the set S.
 
-    while queue:
-        u = queue.popleft()
-        for v in self.G.adj[u]:
-            if (u, v) in f and f[(u, v)] < self.G.w[(u, v)] and not visited[v]:
-                visited[v] = True
-                queue.append(v)
+    ## Return the edges that cross the cut:
+    Edges = [(u,v) for u in S for v in G.adj[u] if v not in S]
 
-    # S is now the set of vertices reached by the BFS
-    S = {u for u in range(self.G.n) if visited[u]}
-
-    # Edges from S to T in the original graph
-    Edges = [(u, v) for u in S for v in self.G.adj[u] if v not in S and (u, v) in self.G.w]
-
+    ### Find the edges that cross the cut (S,T), i.e., they start from S and end in T.
+    ### Return these edges.
     return Edges
             
 if __name__ == "__main__":
