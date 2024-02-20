@@ -1,27 +1,26 @@
+'''
+Input: A graph, given as directed, but interpreted to be nondirected
+
+Interpretation: The vertices are players of a clandestine game. Edges denote observed
+interactions between players. Players have formed four secret societies. Players are more
+likely to interact with players that are members of the same society, and less likely to
+interact with outsiders (though these interactions may occur). Every player belongs to
+one of the four secret societies. The societies try to form in such a way that they are
+roughly the same size, though the sizes may in some cases differ.
+
+Task: Based on the edges, formulate an estimate as to what are the four secret societies.
+Return a list of four lists in such a way that every vertex belongs to exactly one list.
+Order the lists internally from the smallest vertex number to the largest.
+'''
+
 import graph
 import sys
 
-def algorithm(g, B, s, t):
-    visited  = [False] * (g.n) #Create an array that has false for each node
-    queue = []
-    n = 0 #counter to get the result
-
-    queue.append(s) #Add the starting node s to the queue
-    visited[s] = True #mark s visited
-
-    while queue:
-      s = queue.pop(0) #Get the first/leftmost node from the queue
-      if s == t: #If current node matches the end node break
-        break
-   
-      for i in g.adj[s]: #Loop through the adjacent nodes (from current node)
-        if visited[i] == False: #If an adjacent node has not been visited yet
-          if i in B: #If the not visited node is in set B 
-            n+=1 #increase counter
-          queue.append(i) #add the node to queue
-          visited[i] = True 
-        
-    return n #Finally return the end result (number of nodes in set)
+def algorithm(g):
+  for i in range(7):
+    print(i, g.adj[i])
+    
+  return 0
 
 ### Read in a set of vertices from a file. These are just numbers separated by whitespace.
 def readset(filename):
@@ -40,19 +39,7 @@ def readpair(filename):
     return (int(v), int(w))
 
 
-### If ran from the command line:
 if __name__ == "__main__":
-  # Graph is the first command line argument:
   g = graph.Graph()
   g.readgraph(sys.argv[1])
-  # Vertices are the second command line argument:
-  B = readset(sys.argv[2])
-  # Pair is the third command line argument:
-  (v,w) = readpair(sys.argv[3])
-
-  ### Call your algorithm:
-
-  n = algorithm(g, B, v, w)
-
-  # Print the result:
-  print("result:",n)
+  algorithm(g)
