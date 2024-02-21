@@ -12,8 +12,8 @@ class Graph:
             self.communities = {i: [i] for i in range(self.n)}
 
     def calculate_modularity(self):
-    # This is a placeholder implementation. You'll need to replace this with
-    # your actual modularity calculation.
+        # This is a placeholder implementation. You'll need to replace this with
+        # your actual modularity calculation.
         m = sum(self.w.values())
         q = 0.0
         for i in range(self.n):
@@ -28,31 +28,31 @@ class Graph:
         for i in range(self.n):
             best_community = self.communities[i]
             best_gain = 0
+            original_community = self.communities[i]  # Store original community
             for j in self.adj[i]:
-                original_community = self.communities[j]
+                original_community_j = self.communities[j]  # Store original community of j
                 self.communities[j] = self.communities[i]
                 gain = self.calculate_modularity() - self.calculate_modularity()
                 if gain > best_gain:
                     best_community = self.communities[i]
                     best_gain = gain
-                self.communities[j] = original_community
+                self.communities[j] = original_community_j  # Reset community of j
             self.communities[i] = best_community
+            self.communities[i] = original_community
 
     def form_new_network(self):
-    # Implement new network formation here
         new_adj = {}
         new_w = {}
         for i in range(self.n):
             for j in self.adj[i]:
                 if self.communities[i] != self.communities[j]:
-                    if (self.communities[i], self.communities[j]) not in new_w:
-                        new_w[(self.communities[i], self.communities[j])] = self.w.get((i, j), 0)
-                    else:
-                        new_w[(self.communities[i], self.communities[j])] += self.w.get((i, j), 0)
+                    new_w.setdefault((self.communities[i], self.communities[j]), 0)
+                    new_w[(self.communities[i], self.communities[j])] += self.w.get((i, j), 0)
                     new_adj.setdefault(self.communities[i], []).append(self.communities[j])
-        self.adj = [new_adj.get(i, []) for i in range(self.n)]
+        self.adj = [[] for _ in range(len(new_adj))]
+        for i, neighbors in enumerate(new_adj.values()):
+            self.adj[i] = neighbors
         self.w = new_w
-        self.communities = {i: [i] for i in range(self.n)}
 
     def louvain_method(self):
         while True:
@@ -88,4 +88,4 @@ class Graph:
     
 U = Graph()
 U.readgraph("testgraph.txt")
-U.louvain_method()
+#U.louvain_method()
