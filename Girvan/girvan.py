@@ -1,3 +1,5 @@
+import sys
+
 def edge_betweenness(graph):
     betweenness = {edge: 0 for edge in graph['edges']}
     betweenness.update({(v, u): 0 for (u, v) in betweenness.keys()})
@@ -76,45 +78,33 @@ def print_graph(graph):
     for edge in graph['edges']:
         print(edge)
 
+def readGraph(filename):
+    with open(filename, 'r') as file:
+        lines = file.readlines()
 
-graph = {
-    'nodes': [0, 1, 2, 3, 4, 5, 6],
-    'edges': [(0, 1), (0, 2), (1, 2), (1, 3), (2, 3), (2, 4), (3, 4), (3, 5), (4, 5), (4, 6), (5, 6)],
-    0: [1, 2],
-    1: [0, 2, 3],
-    2: [0, 1, 3, 4],
-    3: [1, 2, 4, 5],
-    4: [2, 3, 5, 6],
-    5: [3, 4, 6],
-    6: [4, 5]
-}
+    graph = {}
+    nodes = []
+    edges = []
 
-graph2 = {
-    'nodes': [0, 1, 2, 3, 4, 5, 6, 7, 8],
-    'edges': [(0, 1), (0, 2), (1, 2), (1, 3), (2, 3), (2, 4), (3, 4), (3, 5), (4, 5), (4, 6), (5, 6), (6, 7), (7, 8), (8, 6)],
-    0: [1, 2],
-    1: [0, 2, 3],
-    2: [0, 1, 3, 4],
-    3: [1, 2, 4, 5],
-    4: [2, 3, 5, 6],
-    5: [3, 4, 6],
-    6: [4, 5, 7, 8],
-    7: [6, 8],
-    8: [6, 7]
-}
+    for line in lines:
+        node_and_adjacents = list(map(int, line.split()))
+        node = node_and_adjacents[0]
+        adjacents = node_and_adjacents[1:]
 
-graph3 = {
-    'nodes': [0, 1, 2, 3, 4, 5, 6, 7],
-    'edges': [(0, 1), (0, 2), (1, 2), (1, 3), (2, 3), (2, 4), (3, 4), (3, 5), (4, 5), (4, 6), (5, 6), (6, 7)],
-    0: [1, 2],
-    1: [0, 2, 3],
-    2: [0, 1, 3, 4],
-    3: [1, 2, 4, 5],
-    4: [2, 3, 5, 6],
-    5: [3, 4, 6],
-    6: [4, 5, 7],
-    7: [6]
-}
+        nodes.append(node)
+        graph[node] = adjacents
 
-result = girvan_newman(graph3)
+        for adjacent in adjacents:
+            edge = tuple(sorted((node, adjacent)))
+            if edge not in edges:
+                edges.append(edge)
+
+    graph['nodes'] = nodes
+    graph['edges'] = edges
+
+    return graph
+
+inputgraph = sys.argv[1]
+graph = readGraph(inputgraph)
+result = girvan_newman(graph)
 print_graph(result)
