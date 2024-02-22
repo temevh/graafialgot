@@ -51,7 +51,6 @@ def girvan_newman(graph):
     return graph
 
 def print_graph(graph):
-    # Find connected components (communities)
     visited = {node: False for node in graph['nodes']}
     communities = []
     
@@ -68,12 +67,10 @@ def print_graph(graph):
             dfs(node, community)
             communities.append(community)
     
-    # Print communities
     print("Communities:")
     for i, community in enumerate(communities, 1):
         print(f"Community {i}: {community}")
-    
-    # Print remaining edges
+
     print("\nRemaining edges:")
     for edge in graph['edges']:
         print(edge)
