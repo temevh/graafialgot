@@ -1,41 +1,60 @@
 import sys
 
 def edge_betweenness(graph):
+    # Initialize betweenness for each edge as 0
     betweenness = {edge: 0 for edge in graph['edges']}
+    # Add reverse edges to the betweenness dictionary
     betweenness.update({(v, u): 0 for (u, v) in betweenness.keys()})
+    # For each node in the graph
     for node in graph['nodes']:
+        # Initialize stack, paths, and distance
         stack, paths, dist = [], {v: [] for v in graph['nodes']}, {v: float('inf') for v in graph['nodes']}
+        # Start from the current node
         stack.append(node)
         paths[node] = [[node]]
         dist[node] = 0
+        # While there are nodes to process
         while stack:
             v = stack.pop(0)
+            # For each neighbor of the current node
             for w in graph[v]:
+                # If the neighbor hasn't been visited yet
                 if dist[w] == float('inf'):
+                    # Add it to the stack and update its distance
                     stack.append(w)
                     dist[w] = dist[v] + 1
+                # If the shortest path to the neighbor has been found
                 if dist[w] == dist[v] + 1:
+                    # Add all paths to the neighbor
                     paths[w].extend([path + [w] for path in paths[v]])
+        # Calculate betweenness for each edge
         node_betweenness = {edge: 0 for edge in betweenness.keys()}
         for path in [path for paths in paths.values() for path in paths]:
             for edge in zip(path[:-1], path[1:]):
                 node_betweenness[edge] += 1
+        # Update the betweenness of each edge
         for edge in betweenness.keys():
             betweenness[edge] += node_betweenness[edge] / 2
+    # Return the betweenness of each edge
     return betweenness
 
 def remove_edge(graph, edge):
+    # Remove the edge from the adjacency lists of its nodes
     graph[edge[0]].remove(edge[1])
     graph[edge[1]].remove(edge[0])
+    # Remove the edge from the list of edges
     graph['edges'].remove(edge)
 
 def connected_components(graph):
+    # Initialize all nodes as not visited
     visited = {node: False for node in graph['nodes']}
+    # Depth-first search
     def dfs(v):
         visited[v] = True
         for w in graph[v]:
             if not visited[w]:
                 dfs(w)
+    # Count connected components
     components = 0
     for node in graph['nodes']:
         if not visited[node]:
@@ -44,7 +63,8 @@ def connected_components(graph):
     return components
 
 def girvan_newman(graph):
-    while connected_components(graph) < 4:
+    # Detecting 4 communities (ie. run the loop until we have found 4 distinct communities)
+    while connected_components(graph) < 4: 
         betweenness = edge_betweenness(graph)
         edge_to_remove = max(betweenness, key=betweenness.get)
         remove_edge(graph, edge_to_remove)
@@ -54,6 +74,7 @@ def print_graph(graph):
     visited = {node: False for node in graph['nodes']}
     communities = []
     
+    # Depth-first search
     def dfs(v, community):
         visited[v] = True
         community.append(v)
@@ -70,10 +91,6 @@ def print_graph(graph):
     print("Communities:")
     for i, community in enumerate(communities, 1):
         print(f"Community {i}: {community}")
-
-    print("\nRemaining edges:")
-    for edge in graph['edges']:
-        print(edge)
 
 def readGraph(filename):
     with open(filename, 'r') as file:
