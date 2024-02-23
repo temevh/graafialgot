@@ -31,7 +31,9 @@ def edge_betweenness(graph):
         node_betweenness = {edge: 0 for edge in betweenness.keys()}
         for path in [path for paths in paths.values() for path in paths]:
             for edge in zip(path[:-1], path[1:]):
-                node_betweenness[edge] += 1
+                # Only update betweenness if the edge exists in the graph
+                if edge in betweenness:
+                    node_betweenness[edge] += 1
         # Update the betweenness of each edge
         for edge in betweenness.keys():
             betweenness[edge] += node_betweenness[edge] / 2
@@ -39,11 +41,16 @@ def edge_betweenness(graph):
     return betweenness
 
 def remove_edge(graph, edge):
-    # Remove the edge from the adjacency lists of its nodes
-    graph[edge[0]].remove(edge[1])
-    graph[edge[1]].remove(edge[0])
-    # Remove the edge from the list of edges
-    graph['edges'].remove(edge)
+    # Check if the edge exists in the graph
+    if edge in graph['edges']:
+        # Remove the edge from the adjacency lists of its nodes
+        if edge[1] in graph[edge[0]]:
+            graph[edge[0]].remove(edge[1])
+        if edge[0] in graph[edge[1]]:
+            graph[edge[1]].remove(edge[0])
+        # Remove the edge from the list of edges
+        print(f"Removing edge {edge}")
+        graph['edges'].remove(edge)
 
 def connected_components(graph):
     # Initialize all nodes as not visited
@@ -62,12 +69,16 @@ def connected_components(graph):
             components += 1
     return components
 
+
 def girvan_newman(graph):
     # Detecting 4 communities (ie. run the loop until we have found 4 distinct communities)
     while connected_components(graph) < 4: 
         betweenness = edge_betweenness(graph)
         edge_to_remove = max(betweenness, key=betweenness.get)
         remove_edge(graph, edge_to_remove)
+        # Remove the edge from the betweenness dictionary
+        del betweenness[edge_to_remove]
+        del betweenness[(edge_to_remove[1], edge_to_remove[0])]  # remove the reverse edge as well
     return graph
 
 def print_graph(graph):
