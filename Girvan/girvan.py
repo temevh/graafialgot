@@ -1,43 +1,42 @@
 import sys
 
 def edge_betweenness(graph):
-    # Initialize betweenness for each edge as 0
+    # Initialize betweenness dictionary for tracking edge betweenness values
     betweenness = {edge: 0 for edge in graph['edges']}
-    # Add reverse edges to the betweenness dictionary
     betweenness.update({(v, u): 0 for (u, v) in betweenness.keys()})
-    # For each node in the graph
+
+    # Iterate through nodes to calculate node betweenness using BFS
     for node in graph['nodes']:
-        # Initialize stack, paths, and distance
-        stack, paths, dist = [], {v: [] for v in graph['nodes']}, {v: float('inf') for v in graph['nodes']}
-        # Start from the current node
+        stack, paths, dist = ([], {v: [] for v in graph['nodes']},
+                              {v: float('inf') for v in graph['nodes']})
         stack.append(node)
         paths[node] = [[node]]
         dist[node] = 0
-        # While there are nodes to process
+
+        # BFS to find the shortest paths and update betweenness values
         while stack:
-            v = stack.pop(0)
-            # For each neighbor of the current node
-            for w in graph[v]:
-                # If the neighbor hasn't been visited yet
-                if dist[w] == float('inf'):
-                    # Add it to the stack and update its distance
-                    stack.append(w)
-                    dist[w] = dist[v] + 1
-                # If the shortest path to the neighbor has been found
-                if dist[w] == dist[v] + 1:
-                    # Add all paths to the neighbor
-                    paths[w].extend([path + [w] for path in paths[v]])
-        # Calculate betweenness for each edge
-        node_betweenness = {edge: 0 for edge in betweenness.keys()}
+            vertex = stack.pop(0)
+            for neighbour in graph[vertex]:
+
+                # if distance is inf, neighbour has not been visited
+                if dist[neighbour] == float('inf'):
+                    stack.append(neighbour)
+                    dist[neighbour] = dist[vertex] + 1
+
+                if dist[neighbour] == dist[vertex] + 1:
+                    paths[neighbour].extend([path + [neighbour] for path in paths[vertex]])
+
+        nodeBetweenness = {edge: 0 for edge in betweenness.keys()}
+
+        # Update betweenness values based on the shortest paths
         for path in [path for paths in paths.values() for path in paths]:
+
             for edge in zip(path[:-1], path[1:]):
-                # Only update betweenness if the edge exists in the graph
-                if edge in betweenness:
-                    node_betweenness[edge] += 1
-        # Update the betweenness of each edge
+                nodeBetweenness[edge] += 1
+
         for edge in betweenness.keys():
-            betweenness[edge] += node_betweenness[edge] / 2
-    # Return the betweenness of each edge
+            betweenness[edge] += nodeBetweenness[edge] / 2
+
     return betweenness
 
 def remove_edge(graph, edge):
@@ -76,9 +75,6 @@ def girvan_newman(graph):
         betweenness = edge_betweenness(graph)
         edge_to_remove = max(betweenness, key=betweenness.get)
         remove_edge(graph, edge_to_remove)
-        # Remove the edge from the betweenness dictionary
-        del betweenness[edge_to_remove]
-        del betweenness[(edge_to_remove[1], edge_to_remove[0])]  # remove the reverse edge as well
     return graph
 
 def print_graph(graph):
@@ -121,8 +117,11 @@ def readGraph(filename):
 
         for adjacent in adjacents:
             edge = tuple(sorted((node, adjacent)))
+            reverseEdge = tuple((adjacent, node))
+
             if edge not in edges:
                 edges.append(edge)
+                edges.append(reverseEdge)
 
     graph['nodes'] = nodes
     graph['edges'] = edges
