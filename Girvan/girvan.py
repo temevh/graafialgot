@@ -33,6 +33,7 @@ def edge_betweenness(graph):
 
             for edge in zip(path[:-1], path[1:]):
                 nodeBetweenness[edge] += 1
+                nodeBetweenness[(edge[1], edge[0])] += 1  # Add this line
 
         for edge in betweenness.keys():
             betweenness[edge] += nodeBetweenness[edge] / 2
@@ -93,6 +94,7 @@ def print_graph(graph):
         if not visited[node]:
             community = []
             dfs(node, community)
+            community.sort()
             communities.append(community)
     
     print("Communities:")
