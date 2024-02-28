@@ -25,10 +25,5 @@ if __name__ == "__main__":
     top10 = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:10]
 
     print("Top 10 nodes: ", end="")
-    print("[", end = "")
     for i in top10:
-        if (i == (len(top10)-1)):
-            print(f"{i}", end = "")
-        else:
-            print(f"{i}, ", end = "")
-    print("]")
+        print(f"{i}, ", end = "")
